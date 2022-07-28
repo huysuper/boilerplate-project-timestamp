@@ -18,10 +18,27 @@ app.get("/", function (req, res) {
   res.sendFile(__dirname + '/views/index.html');
 });
 
+ 
+app.get("/api/", function (req, res) {
+  let time = new Date();
+  res.json({unix: time.getTime(), utc: time.toGMTString()});
+});
 
-// your first API endpoint... 
-app.get("/api/hello", function (req, res) {
-  res.json({greeting: 'hello API'});
+
+app.get("/api/:date", function (req, res) {
+  let date = req.params.date;
+  let time
+  if (Number(date)) {
+    time = new Date(Number(date));
+    res.json({unix: time.getTime(), utc: time.toGMTString()});
+  } else {
+    time = new Date(date);
+  }
+  if (!isNaN(time.getTime())) {
+    res.json({unix: time.getTime(), utc: time.toGMTString()});
+  } else {
+    res.json({ error : "Invalid Date" });
+  }
 });
 
 
